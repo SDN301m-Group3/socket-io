@@ -33,16 +33,11 @@ io.on('connection', socket => {
 
     // console.log('a user connected, socket id: ', socket.id);
 
-    socket.on('sendNotification', ({ type, receivers }) => {
-        if (type === 'USER') {
-            const user = getUser(receivers._id);
-            console.log('user: ', user);
+    socket.on('sendNotification', data => {
+        if (data.type === 'USER') {
+            const user = getUser(data.receivers);
             if (user) {
-                console.log('socket: ', user.socketId);
-                io.to(user.socketId).emit('getNotification', {
-                    sender: receivers,
-                    type,
-                });
+                io.to(user.socketId).emit('getNotification', data);
             }
         }
     });
